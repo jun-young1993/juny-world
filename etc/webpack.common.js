@@ -33,7 +33,8 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [
                 { from: "./src/main.css", to: "./main.css" },
-                // { from: "./src/images", to: "./images" },
+                { from: "./src/assets/gltf", to: "./gltf" },
+                { from: "./src/assets/image", to: "./image" },
                 // { from: "./src/models", to: "./models" },
                 // { from: "./src/sounds", to: "./sounds" }
             ],
