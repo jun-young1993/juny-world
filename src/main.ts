@@ -136,14 +136,14 @@ for(let geolitIndex = 0; geolitIndex<geolits.length; geolitIndex++){
     const geolitGeometry = new BoxGeometry(geolitWidth, geolitHeight, geolitDepth);
     const geolitFrontMaterial = new THREE.MeshBasicMaterial({
         // map: geoliteGithubLogTexture,
-        // side: THREE.FrontSide,
-        // opacity : 1,
+        side: THREE.FrontSide,
+        opacity : 1,
         // transparent : false 
     });
     
     const geolitTexture = geolitTextureLoader.load(
         // githubLogPath('5x6'),
-        commonPath.testImagePath
+        commonPath.githubLogo
     );
     geolitFrontMaterial.map = geolitTexture;
     geolitTexture.needsUpdate=true;

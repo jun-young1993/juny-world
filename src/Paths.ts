@@ -6,3 +6,4 @@ export const githubLogPath = (size: githubLogSizeType) => {
 };
 
 export const testImagePath = `${imagePath}test.png`;
+export const githubLogo = `${imagePath}github_logo.png`;
