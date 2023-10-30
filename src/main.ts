@@ -120,7 +120,7 @@ dotGuiAdd(wallMesh.position, 'wall mesh position');
 
 
 const geolitTextureLoader = new TextureLoader();
-const geolits = ['github','test'];
+const geolits = ['github'];
 const geolitGroup = new Group();
 for(let geolitIndex = 0; geolitIndex<geolits.length; geolitIndex++){
 
