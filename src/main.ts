@@ -32,6 +32,15 @@ const dotGuiAdd = function (object:object,name:string) : void
 
 //Canvas
 const canvas = document.querySelector('#three-canvas') as HTMLCanvasElement;
+// ========== GLTF
+const gltfLoader = new GLTFLoader();
+// ========== textureLoader
+const textureLoader = new TextureLoader();
+
+// ================ Light
+// spotLight
+const spotLight = new THREE.SpotLight(colors.white);
+spotLight.castShadow = true;
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -100,11 +109,42 @@ wallMesh.position.set(wallPositionX, wallPositionY, wallPositionZ);
 scene.add(wallMesh);
 dotGuiAdd(wallMesh.position, 'wall mesh position');
 
+// Geolit
+const geolitTextureLoader = new TextureLoader();
+const geoliteGithubLogTexture = geolitTextureLoader.load(
+    githubLogPath('5x6'),
+);
 
-// ========== GLTF
-const gltfLoader = new GLTFLoader();
-// ========== textureLoader
-const textureLoader = new TextureLoader();
+geoliteGithubLogTexture.wrapS = THREE.RepeatWrapping;
+geoliteGithubLogTexture.wrapT = THREE.RepeatWrapping;
+geoliteGithubLogTexture.repeat.set( 0.5, 0.5 );
+geoliteGithubLogTexture.needsUpdate = true;
+const geolitWidth = 20;
+const geolitHeight = 24;
+const geolitDepth = 4;
+const geoliteX = 0;
+const geoliteY = geolitHeight/2;
+const geoliteZ = 0;
+const geoliteSpotLight = spotLight.clone();
+geoliteSpotLight.position.set(geoliteX, geoliteY*10, geoliteZ);
+scene.add(geoliteSpotLight);
+const geolitGeometry = new BoxGeometry(geolitWidth, geolitHeight, geolitDepth);
+const geolitFrontMaterial = new THREE.MeshBasicMaterial({
+    map: geoliteGithubLogTexture,
+    side: THREE.FrontSide,
+    opacity : 1,
+    transparent : false 
+});
+
+const geolitMesh = new Mesh(geolitGeometry, geolitFrontMaterial);
+geolitMesh.position.set(geoliteX, geoliteY, geoliteZ);
+
+scene.add(geolitMesh);
+dotGuiAdd(geolitMesh.position, 'geolite mesh position');
+
+
+
+
 
 // resize image
 
@@ -122,37 +162,8 @@ gltfLoader.load(
 
     }
 );
-//
-const basicRectangleGltfPath = './gltf/white-rectangle-10x12x2.glb';
-
-gltfLoader.load(
-    basicRectangleGltfPath,
-    glb => {
 
 
-        textureLoader.load(
-            githubLogPath,
-            texture => {
-                console.log(texture);
-                const modelMesh = glb.scene.children[0] as Mesh;
-                modelMesh.position.set(0,6,0);
-                const material = modelMesh.material as MeshStandardMaterial;
-                texture.wrapS = THREE.RepeatWrapping;
-                texture.wrapT = THREE.RepeatWrapping;
-                texture.repeat.set(0.05, 0.05); // 반복 패턴 설정
-                material.map = texture;
-
-                material.needsUpdate= true;
-
-                scene.add(modelMesh);
-                dotGuiAdd(modelMesh.position, 'basic rectangle position');
-            }
-        );
-
-
-
-    }
-);
 
 // 조준점 설정
 const crossHairGeometry = new THREE.CircleGeometry(0.02, 32);
@@ -205,7 +216,10 @@ function draw() {
     const delta = clock.getDelta();
     const time = clock.getElapsedTime();
 
+    // 캐릭터 이동
     work(delta);
+
+
     camera.updateMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight); // 브라우저 사이즈 변경될때마다 업데이트
     renderer.render(scene, camera);
